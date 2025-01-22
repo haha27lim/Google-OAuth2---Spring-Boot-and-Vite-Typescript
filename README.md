@@ -40,7 +40,9 @@ VITE_API_URL=http://localhost:8080
 
 # Login.tsx:
 
-window.location.href = `${import.meta.env.VITE_API_URL}/oauth2/authorization/google`;
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_APP_API_URL}/oauth2/authorization/google`;
+  };
 
               <div className="form-group">
                 <button
