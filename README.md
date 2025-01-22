@@ -1,6 +1,7 @@
 To add Google OAuth2 to the project (Spring Boot + Vite + Typescript), you need to add:
 
-Backend:
+-Backend:
+
 # pom.xml:
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -26,7 +27,7 @@ spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_
 spring.security.oauth2.client.registration.google.scope=email,profile
 
 
-Frontend (Vite + Typescript):
+- Frontend (Vite + Typescript):
 
 # .env:
 
