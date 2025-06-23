@@ -1,30 +1,48 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
-const API_URL = "/api/test/";
+const API_URL = "/api/";
 
-// Configure axios defaults
-axios.defaults.withCredentials = true;
+class UserService {
+  getPublicContent() {
+    return axios.get(API_URL + "test/all");
+  }
 
-const getPublicContent = () => {
-  return axios.get(API_URL + "all");
-};
+  getUserBoard() {
+    return axios.get(API_URL + "test/user", { headers: authHeader() });
+  }
 
-const getUserBoard = () => {
-  return axios.get(API_URL + "user", {
-    withCredentials: true
-  });
-};
+  getModeratorBoard() {
+    return axios.get(API_URL + "test/mod", { headers: authHeader() });
+  }
 
-const getAdminBoard = () => {
-  return axios.get(API_URL + "admin", {
-    withCredentials: true
-  });
-};
+  getAdminBoard() {
+    return axios.get(API_URL + "test/admin", { headers: authHeader() });
+  }
 
-const UserService = {
-  getPublicContent,
-  getUserBoard,
-  getAdminBoard,
+  getAllUsers() {
+    return axios.get(API_URL + "users", { headers: authHeader() });
+  }
+
+  updateUser(id: number, userData: any) {
+    const headers = authHeader();
+    console.log('Update user request:', {
+      url: `${API_URL}users/${id}`,
+      headers,
+      data: userData
+    });
+    return axios.put(`${API_URL}users/${id}`, userData, { 
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  deleteUser(id: number) {
+    return axios.delete(`${API_URL}users/${id}`, { headers: authHeader() });
+  }
+
 }
 
-export default UserService;
+export default new UserService();

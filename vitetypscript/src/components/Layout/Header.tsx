@@ -1,78 +1,83 @@
-import { Link } from "react-router-dom";
-import AuthService from "../../services/auth.service";
-import { useEffect } from "react";
-import EventBus from "../../common/EventBus";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { Compass, LogIn, UserPlus } from "lucide-react";
+import '../../styles/components/Header.css';
 
 export const Header: React.FC = () => {
-        
-    const { currentUser, setCurrentUser } = useAuth();
+    const navigate = useNavigate();
+   
+    const { isAuthenticated, logout, showAdminBoard } = useAuth();
 
-    useEffect(() => {
-        const user = AuthService.getCurrentUser();
-    
-        if (user) {
-          setCurrentUser(user);
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+        } catch (e: any) {
+            if (e?.response?.status !== 403) {
+                console.error("Logout failed:", e);
+            }
         }
-    
-        EventBus.on("logout", logOut);
-    
-        return () => {
-          EventBus.remove("logout", logOut);
-        };
-      }, []);
-
-
-    const logOut = () => {
-        AuthService.logout();
-        setCurrentUser(undefined);
+        navigate('/login');
     };
 
-
     return (
-        <div>
-            <nav className="navbar navbar-expand navbar-dark bg-dark">
-                <Link to={"/"} className="navbar-brand">
-                    My Application
-                </Link>
-                <div className="navbar-nav mr-auto">
-                    <li className="nav-item">
+        <header className="header">
+            <div className="header-container">
+                <div className="header-content">
+                    <Link to="/" className="logo-link">
+                        <div className="logo-container">
+                            <Compass className="logo-icon" />
+                        </div>
+                        <div>
+                            <h1 className="app-title">JourneyBloom</h1>
+                        </div>
+                    </Link>
+
+                    <div className="nav-buttons">
                         <Link to={"/home"} className="nav-link">
                             Home
                         </Link>
-                    </li>
 
+                        {isAuthenticated ? (
+                            <>
+                                <Link to="/dashboard" className="nav-link">Trip Planner</Link>
+                                <Link to="/ai-planner" className="nav-link">
+                                    AI Planner
+                                </Link>
+                                <Link to={"/user"} className="nav-link">User</Link>
+                                <Link to="/profile" className="nav-link">Profile</Link>
+                                <button onClick={handleLogout} className="logout-button">
+                                    <LogIn className="button-icon" />
+                                    Logout
+                                </button>
+                            </>
+                        ) :
+                            (
+                                <>
+                                    <Link to="/login" className="login-button">
+                                        <LogIn className="button-icon" />
+                                        Login
+                                    </Link>
+                                    <Link to="/register" className="signup-button">
+                                        <UserPlus className="button-icon" />
+                                        Sign Up
+                                    </Link>
+                                </>
+                            )
+                        }
+
+
+                        {showAdminBoard && (
+                            <Link to={"/admin"} className="nav-link">
+                                Admin Board
+                            </Link>
+                        )}
+
+                    </div>
                 </div>
-
-                {currentUser ? (
-                    <div className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link to={"/profile"} className="nav-link">
-                                {currentUser.username}
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <a href="/login" className="nav-link" onClick={logOut}>
-                                LogOut
-                            </a>
-                        </li>
-                    </div>
-                ) : (
-                    <div className="navbar-nav ms-auto">
-                        <li className="nav-item">
-                            <Link to={"/login"} className="nav-link">
-                                Login
-                            </Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link to={"/register"} className="nav-link">
-                                Sign Up
-                            </Link>
-                        </li>
-                    </div>
-                )}
-            </nav>
-        </div>
+            </div>
+        </header>
     );
 };
+
+export default Header; 
