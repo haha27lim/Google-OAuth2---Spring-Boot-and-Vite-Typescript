@@ -78,7 +78,7 @@ public class WebSecurityConfig {
         "https://**.vercel.app",
         "https://**.onrender.com"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "X-XSRF-TOKEN"));
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "X-XSRF-TOKEN", "Accept"));
     configuration.setAllowCredentials(true);
     configuration.setMaxAge(3600L);
 
